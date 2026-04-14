@@ -23,7 +23,7 @@ export default function Login(): ReactElement | null {
     if (!loading && session) navigate('/');
   }, [session, loading, navigate]);
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent): Promise<void> {
     e.preventDefault();
     setError(null);
     setInfo(null);
@@ -48,7 +48,7 @@ export default function Login(): ReactElement | null {
     }
   }
 
-  async function handleOAuth(provider: 'google' | 'azure') {
+  async function handleOAuth(provider: 'google' | 'azure'): Promise<void> {
     setError(null);
     const { error } = await supabase.auth.signInWithOAuth({
       provider,
@@ -132,11 +132,7 @@ export default function Login(): ReactElement | null {
               disabled={submitting}
               className="w-full py-2 text-sm font-medium bg-primary text-primary-foreground rounded-lg hover:opacity-90 disabled:opacity-50 transition-opacity"
             >
-              {submitting
-                ? 'Procesando...'
-                : mode === 'login'
-                  ? 'Ingresar'
-                  : 'Crear cuenta'}
+              {submitting ? 'Procesando...' : mode === 'login' ? 'Ingresar' : 'Crear cuenta'}
             </button>
           </form>
         </div>
@@ -161,7 +157,7 @@ export default function Login(): ReactElement | null {
   );
 }
 
-function GoogleIcon() {
+function GoogleIcon(): ReactElement {
   return (
     <svg width="16" height="16" viewBox="0 0 24 24">
       <path
@@ -184,7 +180,7 @@ function GoogleIcon() {
   );
 }
 
-function MicrosoftIcon() {
+function MicrosoftIcon(): ReactElement {
   return (
     <svg width="16" height="16" viewBox="0 0 24 24">
       <path d="M11.4 24H0V12.6h11.4V24z" fill="#F25022" />

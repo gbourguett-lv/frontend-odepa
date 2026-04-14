@@ -1,6 +1,6 @@
-import { useEffect, useRef, type ReactElement } from "react";
-import type { UIMessage } from "ai";
-import { MessageBubble } from "./MessageBubble";
+import { useEffect, useRef, type ReactElement } from 'react';
+import type { UIMessage } from 'ai';
+import { MessageBubble } from './MessageBubble';
 
 type MessageListProps = {
   messages: UIMessage[];
@@ -13,7 +13,7 @@ export function MessageList({ messages, isLoading, error }: MessageListProps): R
 
   // Desplaza al final cada vez que cambian los mensajes o el estado de carga
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isLoading]);
 
   return (
@@ -29,7 +29,7 @@ export function MessageList({ messages, isLoading, error }: MessageListProps): R
         <MessageBubble key={message.id} message={message} />
       ))}
 
-      {isLoading && messages[messages.length - 1]?.role === "user" && (
+      {isLoading && messages[messages.length - 1]?.role === 'user' && (
         <div className="px-4 py-1">
           <div className="flex items-center gap-3 max-w-[85%]">
             <div className="shrink-0 w-7 h-7 rounded-full bg-green-600 flex items-center justify-center text-white text-xs font-bold">
@@ -44,11 +44,7 @@ export function MessageList({ messages, isLoading, error }: MessageListProps): R
         </div>
       )}
 
-      {error && (
-        <p className="px-4 text-sm text-destructive">
-          Error: {error.message}
-        </p>
-      )}
+      {error && <p className="px-4 text-sm text-destructive">Error: {error.message}</p>}
 
       <div ref={bottomRef} />
     </div>

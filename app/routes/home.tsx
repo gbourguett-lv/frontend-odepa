@@ -1,27 +1,27 @@
-import { useState, useEffect, useMemo, useCallback, type ReactElement } from "react";
-import { useNavigate, useLoaderData } from "react-router";
-import { useChat } from "@ai-sdk/react";
-import { DefaultChatTransport } from "ai";
-import type { UIMessage } from "ai";
-import { ChatLayout } from "../components/chat/ChatLayout";
-import { MessageList } from "../components/chat/MessageList";
-import { ChatInput } from "../components/chat/ChatInput";
-import { Sidebar, type Thread } from "../components/chat/Sidebar";
-import { useAuth } from "../context/auth";
-import { supabase, authFetch } from "../lib/supabase";
-import type { Route } from "./+types/home";
+import { useState, useEffect, useMemo, useCallback, type ReactElement } from 'react';
+import { useNavigate, useLoaderData } from 'react-router';
+import { useChat } from '@ai-sdk/react';
+import { DefaultChatTransport } from 'ai';
+import type { UIMessage } from 'ai';
+import { ChatLayout } from '../components/chat/ChatLayout';
+import { MessageList } from '../components/chat/MessageList';
+import { ChatInput } from '../components/chat/ChatInput';
+import { Sidebar, type Thread } from '../components/chat/Sidebar';
+import { useAuth } from '../context/auth';
+import { supabase, authFetch } from '../lib/supabase';
+import type { Route } from './+types/home';
 
 type Model = { id: string; label: string; provider: string; description: string };
 
 export async function clientLoader(): Promise<{ models: Model[]; defaultModel: string }> {
-  const res = await fetch("/api/chat/models");
-  if (!res.ok) return { models: [], defaultModel: "claude-haiku-4-5" };
+  const res = await fetch('/api/chat/models');
+  if (!res.ok) return { models: [], defaultModel: 'claude-haiku-4-5' };
   const data = await res.json();
-  return { models: data.models ?? [], defaultModel: data.default ?? "claude-haiku-4-5" };
+  return { models: data.models ?? [], defaultModel: data.default ?? 'claude-haiku-4-5' };
 }
 
 export function meta({}: Route.MetaArgs): Array<Record<string, string>> {
-  return [{ title: "Asistente ODEPA" }];
+  return [{ title: 'Asistente ODEPA' }];
 }
 
 export default function Home(): ReactElement | null {
@@ -31,7 +31,7 @@ export default function Home(): ReactElement | null {
 
   // ── Estado del modelo ─────────────────────────────────────────────────────
   const [selectedModel, setSelectedModel] = useState(defaultModel);
-  const [input, setInput] = useState("");
+  const [input, setInput] = useState('');
 
   // ── Estado de threads ─────────────────────────────────────────────────────
   const [threads, setThreads] = useState<Thread[]>([]);
@@ -40,14 +40,14 @@ export default function Home(): ReactElement | null {
 
   // ── Auth guard ────────────────────────────────────────────────────────────
   useEffect(() => {
-    if (!authLoading && !session) navigate("/login");
+    if (!authLoading && !session) navigate('/login');
   }, [authLoading, session, navigate]);
 
   // ── Cargar threads al autenticarse ────────────────────────────────────────
   useEffect(() => {
     if (!session) return;
     setLoadingThreads(true);
-    authFetch("/api/threads")
+    authFetch('/api/threads')
       .then((r) => r.json())
       .then((data) => {
         const list: Thread[] = data.threads ?? [];
@@ -61,7 +61,7 @@ export default function Home(): ReactElement | null {
   const transport = useMemo(
     () =>
       new DefaultChatTransport({
-        api: "/api/chat",
+        api: '/api/chat',
         headers: async (): Promise<Record<string, string>> => {
           const {
             data: { session },
@@ -76,7 +76,7 @@ export default function Home(): ReactElement | null {
   );
 
   const { messages, sendMessage, setMessages, status, error } = useChat({ transport });
-  const isLoading = status === "submitted" || status === "streaming";
+  const isLoading = status === 'submitted' || status === 'streaming';
 
   // ── Cargar mensajes cuando cambia el thread activo ────────────────────────
   useEffect(() => {
@@ -92,10 +92,10 @@ export default function Home(): ReactElement | null {
   // ── Crear nueva conversación ──────────────────────────────────────────────
   const handleNewConversation = useCallback(async () => {
     const id = crypto.randomUUID();
-    await authFetch(`/api/threads/${id}`, { method: "POST" });
+    await authFetch(`/api/threads/${id}`, { method: 'POST' });
     const newThread: Thread = {
       id,
-      title: "Nueva conversación",
+      title: 'Nueva conversación',
       archived: false,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
@@ -103,19 +103,19 @@ export default function Home(): ReactElement | null {
     setThreads((prev) => [newThread, ...prev]);
     setActiveThreadId(id);
     setMessages([]);
-    setInput("");
+    setInput('');
   }, [setMessages]);
 
   // ── Seleccionar thread ────────────────────────────────────────────────────
-  function handleSelectThread(id: string) {
+  function handleSelectThread(id: string): void {
     if (id === activeThreadId) return;
     setActiveThreadId(id);
-    setInput("");
+    setInput('');
   }
 
   // ── Eliminar thread ───────────────────────────────────────────────────────
-  async function handleDeleteThread(id: string) {
-    await authFetch(`/api/threads/${id}`, { method: "DELETE" });
+  async function handleDeleteThread(id: string): Promise<void> {
+    await authFetch(`/api/threads/${id}`, { method: 'DELETE' });
     setThreads((prev) => prev.filter((t) => t.id !== id));
     if (activeThreadId === id) {
       const remaining = threads.filter((t) => t.id !== id);
@@ -129,24 +129,24 @@ export default function Home(): ReactElement | null {
   }
 
   // ── Cambiar modelo ────────────────────────────────────────────────────────
-  function handleModelChange(modelId: string) {
+  function handleModelChange(modelId: string): void {
     setSelectedModel(modelId);
     setMessages([]);
-    setInput("");
+    setInput('');
   }
 
   // ── Enviar mensaje ────────────────────────────────────────────────────────
-  async function handleSubmit() {
+  async function handleSubmit(): Promise<void> {
     if (!input.trim() || isLoading) return;
 
     // Si no hay thread activo, crear uno automáticamente
     let threadId = activeThreadId;
     if (!threadId && session) {
       const id = crypto.randomUUID();
-      await authFetch(`/api/threads/${id}`, { method: "POST" });
+      await authFetch(`/api/threads/${id}`, { method: 'POST' });
       const newThread: Thread = {
         id,
-        title: "Nueva conversación",
+        title: 'Nueva conversación',
         archived: false,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
@@ -157,22 +157,17 @@ export default function Home(): ReactElement | null {
     }
 
     const text = input;
-    setInput("");
-    sendMessage(
-      { text },
-      { body: { modelId: selectedModel, threadId: threadId ?? undefined } }
-    );
+    setInput('');
+    sendMessage({ text }, { body: { modelId: selectedModel, threadId: threadId ?? undefined } });
 
     // Actualizar título del thread con el primer mensaje si sigue siendo el default
     if (threadId && messages.length === 0) {
       const title = text.slice(0, 60);
       authFetch(`/api/threads/${threadId}`, {
-        method: "PATCH",
+        method: 'PATCH',
         body: JSON.stringify({ title }),
       });
-      setThreads((prev) =>
-        prev.map((t) => (t.id === threadId ? { ...t, title } : t))
-      );
+      setThreads((prev) => prev.map((t) => (t.id === threadId ? { ...t, title } : t)));
     }
   }
 
@@ -207,12 +202,7 @@ export default function Home(): ReactElement | null {
       isStreaming={isLoading}
     >
       <MessageList messages={messages} isLoading={isLoading} error={error} />
-      <ChatInput
-        value={input}
-        onChange={setInput}
-        onSubmit={handleSubmit}
-        isLoading={isLoading}
-      />
+      <ChatInput value={input} onChange={setInput} onSubmit={handleSubmit} isLoading={isLoading} />
     </ChatLayout>
   );
 }

@@ -1,22 +1,20 @@
-import { useState, type ReactElement } from "react";
-import Markdown from "react-markdown";
-import type { UIMessage } from "ai";
+import { useState, type ReactElement } from 'react';
+import Markdown from 'react-markdown';
+import type { UIMessage } from 'ai';
 
 type MessageBubbleProps = {
   message: UIMessage;
 };
 
 export function MessageBubble({ message }: MessageBubbleProps): ReactElement {
-  const isUser = message.role === "user";
+  const isUser = message.role === 'user';
 
   if (isUser) {
     return (
       <div className="flex justify-end px-4 py-1">
         <div className="max-w-[75%] bg-primary text-primary-foreground rounded-2xl rounded-br-sm px-4 py-2 text-sm">
           {message.parts.map((part, i) =>
-            part.type === "text" ? (
-              <p key={i}>{(part as { text: string }).text}</p>
-            ) : null
+            part.type === 'text' ? <p key={i}>{(part as { text: string }).text}</p> : null
           )}
         </div>
       </div>
@@ -25,13 +23,13 @@ export function MessageBubble({ message }: MessageBubbleProps): ReactElement {
 
   // Mensaje del asistente
   const isCallingTool = message.parts.some(
-    (p) => p.type === "tool-invocation" && (p as { state?: string }).state === "call"
+    (p) => p.type === 'tool-invocation' && (p as { state?: string }).state === 'call'
   );
 
   const textContent = message.parts
-    .filter((p) => p.type === "text")
+    .filter((p) => p.type === 'text')
     .map((p) => (p as { text: string }).text)
-    .join("\n");
+    .join('\n');
 
   return (
     <div className="px-4 py-1">
@@ -51,7 +49,7 @@ export function MessageBubble({ message }: MessageBubbleProps): ReactElement {
 
           <div className="prose prose-sm max-w-none text-foreground [&_table]:w-full [&_table]:text-sm [&_th]:text-left [&_th]:font-semibold [&_td]:py-1 [&_tr]:border-b [&_tr]:border-border">
             {message.parts.map((part, i) =>
-              part.type === "text" ? (
+              part.type === 'text' ? (
                 <Markdown key={i}>{(part as { text: string }).text}</Markdown>
               ) : null
             )}
@@ -69,10 +67,10 @@ export function MessageBubble({ message }: MessageBubbleProps): ReactElement {
   );
 }
 
-function CopyButton({ text }: { text: string }) {
+function CopyButton({ text }: { text: string }): ReactElement {
   const [copied, setCopied] = useState(false);
 
-  async function handleCopy() {
+  async function handleCopy(): Promise<void> {
     await navigator.clipboard.writeText(text);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);

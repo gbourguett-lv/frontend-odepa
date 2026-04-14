@@ -6,7 +6,20 @@
     "build": "react-router build",
     "dev": "react-router dev",
     "start": "react-router-serve ./build/server/index.js",
-    "typecheck": "react-router typegen && tsc"
+    "typecheck": "react-router typegen && tsc",
+    "lint": "eslint app",
+    "lint:fix": "eslint app --fix",
+    "format": "prettier --write \"app/**/*.{ts,tsx}\"",
+    "format:check": "prettier --check \"app/**/*.{ts,tsx}\"",
+    "test": "vitest run --coverage",
+    "test:watch": "vitest",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "app/**/*.{ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ]
   },
   "dependencies": {
     "@ai-sdk/cerebras": "^2.0.45",
@@ -31,11 +44,27 @@
   "devDependencies": {
     "@react-router/dev": "7.14.0",
     "@tailwindcss/vite": "^4.2.2",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.1",
     "@types/node": "^22",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
+    "@typescript-eslint/eslint-plugin": "^8.58.2",
+    "@typescript-eslint/parser": "^8.58.2",
+    "@vitejs/plugin-react": "^6.0.1",
+    "eslint": "^9.39.4",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.5",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "husky": "^9.1.7",
+    "jsdom": "^26.1.0",
+    "lint-staged": "^15.5.2",
+    "prettier": "^3.8.2",
     "tailwindcss": "^4.2.2",
     "typescript": "^5.9.3",
-    "vite": "^8.0.3"
+    "vite": "^8.0.3",
+    "vitest": "^3.2.4"
   }
 }
