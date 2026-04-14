@@ -1,4 +1,4 @@
-import type { ReactNode, ReactElement } from "react";
+import type { ReactNode, ReactElement } from 'react';
 
 type Model = { id: string; label: string; provider: string };
 

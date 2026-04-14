@@ -1,4 +1,4 @@
-import type { KeyboardEvent, ReactElement } from "react";
+import type { KeyboardEvent, ReactElement } from 'react';
 
 type ChatInputProps = {
   value: string;
@@ -8,8 +8,8 @@ type ChatInputProps = {
 };
 
 export function ChatInput({ value, onChange, onSubmit, isLoading }: ChatInputProps): ReactElement {
-  function handleKeyDown(e: KeyboardEvent<HTMLTextAreaElement>) {
-    if (e.key === "Enter" && !e.shiftKey) {
+  function handleKeyDown(e: KeyboardEvent<HTMLTextAreaElement>): void {
+    if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       onSubmit();
     }
@@ -34,7 +34,13 @@ export function ChatInput({ value, onChange, onSubmit, isLoading }: ChatInputPro
           aria-label="Enviar"
         >
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-            <path d="M1 7h12M7 1l6 6-6 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            <path
+              d="M1 7h12M7 1l6 6-6 6"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
           </svg>
         </button>
       </div>

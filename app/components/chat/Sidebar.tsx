@@ -47,7 +47,12 @@ export function Sidebar({
           className="w-full flex items-center gap-2 px-3 py-2 text-xs rounded-lg border border-border bg-background hover:bg-muted transition-colors text-foreground"
         >
           <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-            <path d="M6 1v10M1 6h10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+            <path
+              d="M6 1v10M1 6h10"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+            />
           </svg>
           Nueva conversación
         </button>
@@ -55,14 +60,10 @@ export function Sidebar({
 
       {/* Lista de threads */}
       <div className="flex-1 overflow-y-auto px-2 py-1">
-        {loading && (
-          <p className="text-xs text-muted-foreground px-2 py-2">Cargando...</p>
-        )}
+        {loading && <p className="text-xs text-muted-foreground px-2 py-2">Cargando...</p>}
 
         {!loading && threads.length === 0 && (
-          <p className="text-xs text-muted-foreground px-2 py-3">
-            Sin conversaciones aún.
-          </p>
+          <p className="text-xs text-muted-foreground px-2 py-3">Sin conversaciones aún.</p>
         )}
 
         {threads.map((thread) => (
@@ -113,7 +114,7 @@ type ThreadItemProps = {
   onDelete: () => void;
 };
 
-function ThreadItem({ thread, active, onSelect, onDelete }: ThreadItemProps) {
+function ThreadItem({ thread, active, onSelect, onDelete }: ThreadItemProps): ReactElement {
   return (
     <div
       className={`group flex items-center gap-1 px-2 py-1.5 rounded-lg cursor-pointer text-xs transition-colors ${
